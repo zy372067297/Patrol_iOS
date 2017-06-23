@@ -37,13 +37,9 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
     
     @IBAction func loginClick(_ sender: Any) {
         let user = username.text
-        if(user?.isEmpty)!{
-            AlertWithNoButton(view: self, title: "请输入账号", message: nil, preferredStyle: .alert, showTime: 0.5)
-            return
-        }
         let pass = password.text
-        if(pass?.isEmpty)!{
-            AlertWithNoButton(view: self, title: "请输入密码", message: nil, preferredStyle: .alert, showTime: 0.5)
+        
+        if(!CheckInput(user: user!, pass: pass!)){
             return
         }
 
@@ -51,6 +47,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
         
         login.isEnabled = false
         
+        /*
         var urlRequest = URLRequest(url: URL(string: kLogin)!)
         urlRequest.timeoutInterval = TimeInterval(kTimeoutInterval)
         urlRequest.httpMethod = HttpMethod.Get.rawValue
@@ -62,8 +59,21 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
         }catch let er {
             print(er)
         }
+         */
         
         self.present(MainViewController(), animated: true, completion: nil)
+    }
+    
+    private func CheckInput(user : String, pass : String) -> Bool {
+        if(user.isEmpty){
+            AlertWithNoButton(view: self, title: "请输入账号", message: nil, preferredStyle: .alert, showTime: 0.5)
+            return false
+        }
+        if(pass.isEmpty){
+            AlertWithNoButton(view: self, title: "请输入密码", message: nil, preferredStyle: .alert, showTime: 0.5)
+            return false
+        }
+        return true
     }
 
     
@@ -72,8 +82,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
     }
     
     @IBAction func registeClick(_ sender: Any) {
-        printLog(message: "Registe")
-        
+
         let sb = UIStoryboard(name: "Regist", bundle: nil)
         let vc = sb.instantiateViewController(withIdentifier: "RegistViewController") 
         self.present(vc, animated: true, completion: nil)
