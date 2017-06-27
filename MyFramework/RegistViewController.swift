@@ -57,23 +57,23 @@ class RegistViewController: UIViewController {
     
     private func CheckInput(username : String, password : String, passConfirm : String, realname : String) -> Bool {
         if(username.isEmpty){
-            AlertWithNoButton(view: self, title: "请输入新账号", message: nil, preferredStyle: .alert, showTime: 0.5)
+            AlertWithNoButton(view: self, title: msg_PleaseEnterNewUsername, message: nil, preferredStyle: .alert, showTime: 0.5)
             return false
         }
         if(password.isEmpty){
-            AlertWithNoButton(view: self, title: "请输入密码", message: nil, preferredStyle: .alert, showTime: 0.5)
+            AlertWithNoButton(view: self, title: msg_PleaseEnterPassword, message: nil, preferredStyle: .alert, showTime: 0.5)
             return false
         }
         if(passConfirm.isEmpty){
-            AlertWithNoButton(view: self, title: "请输入确认密码", message: nil, preferredStyle: .alert, showTime: 0.5)
+            AlertWithNoButton(view: self, title: msg_PleaseEnterConfirmPassword, message: nil, preferredStyle: .alert, showTime: 0.5)
             return false
         }
         if(password != passConfirm){
-            AlertWithNoButton(view: self, title: "两次输入的密码不同", message: nil, preferredStyle: .alert, showTime: 0.5)
+            AlertWithNoButton(view: self, title: msg_PasswordDifferentBetweenInputs, message: nil, preferredStyle: .alert, showTime: 0.5)
             return false
         }
         if(realname.isEmpty){
-            AlertWithNoButton(view: self, title: "请输入姓名", message: nil, preferredStyle: .alert, showTime: 0.5)
+            AlertWithNoButton(view: self, title: msg_PleastEnterRealname, message: nil, preferredStyle: .alert, showTime: 0.5)
             return false
         }
         return true

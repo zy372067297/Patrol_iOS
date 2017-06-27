@@ -8,7 +8,7 @@
 
 
 //URL
-let kLogin = ""
+let kLogin = "http://192.168.1.122/test/api/user/login"
 
 let kTimeoutInterval = 10
 

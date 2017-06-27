@@ -16,12 +16,17 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        printLog(message: "System start")
+        printLog(message: log_SystemStart)
         
         username.delegate = self
         password.delegate = self
         
-        username.becomeFirstResponder()
+        //username.becomeFirstResponder()
+        setup()
+    }
+    
+    func setup(){
+        setRememberedUserAndPass()
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -47,30 +52,49 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
         
         login.isEnabled = false
         
-        /*
+        HTTPCookieStorage.shared.cookieAcceptPolicy = .always
+        //let cookies = HTTPCookieStorage.shared.cookies
+        //let str = HTTPCookie.requestHeaderFields(with: cookies!)
+        
         var urlRequest = URLRequest(url: URL(string: kLogin)!)
         urlRequest.timeoutInterval = TimeInterval(kTimeoutInterval)
-        urlRequest.httpMethod = HttpMethod.Get.rawValue
+        urlRequest.httpMethod = HttpMethod.Post.rawValue
         urlRequest.httpBody = para.data(using: String.Encoding.utf8)
+        urlRequest.httpShouldHandleCookies = true
+        //urlRequest.allHTTPHeaderFields = str
        
         do{
-             let autoreleasingunsafemutablepoint : AutoreleasingUnsafeMutablePointer<URLResponse?>? = nil
-            _ = try NSURLConnection.sendSynchronousRequest(urlRequest, returning: autoreleasingunsafemutablepoint)
+            let autoreleasingunsafemutablepoint : AutoreleasingUnsafeMutablePointer<URLResponse?>? = nil
+            let _ = try NSURLConnection.sendSynchronousRequest(urlRequest, returning: autoreleasingunsafemutablepoint)
+            //let cookies = HTTPCookieStorage.shared.cookies
+
+            
+            var x = URLRequest(url: URL(string: "http://192.168.1.122/test/api/user/logout")!)
+            x.timeoutInterval = TimeInterval(kTimeoutInterval)
+            x.httpMethod = HttpMethod.Post.rawValue
+            x.httpBody = "id=1".data(using: String.Encoding.utf8)
+            x.httpShouldHandleCookies = true
+            let test : AutoreleasingUnsafeMutablePointer<URLResponse?>? = nil
+            let _ = try NSURLConnection.sendSynchronousRequest(x, returning: test)
+            let t = HTTPCookieStorage.shared.cookies
+            
+  
         }catch let er {
-            print(er)
+            login.isEnabled = true
+            printLog(message: er)
         }
-         */
         
+        login.isEnabled = true
         self.present(MainViewController(), animated: true, completion: nil)
     }
     
     private func CheckInput(user : String, pass : String) -> Bool {
         if(user.isEmpty){
-            AlertWithNoButton(view: self, title: "请输入账号", message: nil, preferredStyle: .alert, showTime: 0.5)
+            AlertWithNoButton(view: self, title: msg_PleaseEnterUsername, message: nil, preferredStyle: .alert, showTime: 0.5)
             return false
         }
         if(pass.isEmpty){
-            AlertWithNoButton(view: self, title: "请输入密码", message: nil, preferredStyle: .alert, showTime: 0.5)
+            AlertWithNoButton(view: self, title: msg_PleaseEnterPassword, message: nil, preferredStyle: .alert, showTime: 0.5)
             return false
         }
         return true
@@ -91,4 +115,21 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
     @IBAction func forgetClick(_ sender: Any) {
         printLog(message: "Forget")
     }
+    
+}
+
+extension LoginViewController{
+    
+    func setRememberedUserAndPass(){
+        let user = SQLiteManager.instance.query(sql: kSql_SelectUserTableLast)
+        if(user.isEmpty){
+            return
+        }
+        let name = user[0].username
+        let pass = user[0].password
+        
+        self.username.text = name
+        self.password.text = pass
+    }
+    
 }

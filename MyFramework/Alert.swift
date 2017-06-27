@@ -9,6 +9,14 @@
 import Foundation
 import UIKit
 
+let msg_PleaseEnterNewUsername = "输入新账号"
+let msg_PleaseEnterUsername = "请输入账号"
+let msg_PleaseEnterPassword = "请输入密码"
+let msg_PleaseEnterConfirmPassword = "请输入确认密码"
+let msg_PasswordDifferentBetweenInputs = "两次输入的密码不同"
+let msg_PleastEnterRealname = "请输入姓名"
+
+
 public func AlertWithNoButton(view : UIViewController, title : String? , message : String? , preferredStyle : UIAlertControllerStyle , showTime : TimeInterval){
     let alert = UIAlertController(title: title, message: message, preferredStyle: preferredStyle)
     view.present(alert, animated: true, completion: nil)

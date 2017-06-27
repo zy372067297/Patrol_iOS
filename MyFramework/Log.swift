@@ -7,14 +7,18 @@
 //
 import Foundation
 
+let logFileName = "log.txt"
+let log_SystemStart = "System start"
+
+
 public func printLog<T>(message: T, file: String = #file, function: String = #function, line: Int = #line){
 
     //let fileName = (file as NSString).lastPathComponent
     let dateFormat = DateFormatter()
-    dateFormat.dateFormat = "yyyy-MM-dd HH:mm:ss"
+    dateFormat.dateFormat = kDateTimeFormate
     let dateStr = dateFormat.string(from: Date())
     let cachePath = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
-    let logUrl = cachePath.appendingPathComponent("log.txt")
+    let logUrl = cachePath.appendingPathComponent(logFileName)
     //let logStr = dateStr + "|" + file + ":" + line + " " + function + "|" + message
     let logStr = "\(dateStr)|\(file) line:\(line) \(function)|\(message)"
     appendText(fileUrl: logUrl, str: logStr)
