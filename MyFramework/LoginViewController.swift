@@ -15,16 +15,21 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
     @IBOutlet weak var login: UIButton!
     
     var activity : UIActivityIndicatorView!
+    var isFirstApear: Bool = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         printLog(message: log_SystemStart)
         setupUI()
+        setRememberedUserAndPass()
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        setRememberedUserAndPass()
+        if(isFirstApear){
+            autoLogin()
+            isFirstApear = false
+        }
     }
     
     @IBAction func loginClick(_ sender: Any) {
@@ -80,50 +85,75 @@ extension LoginViewController{
         }
         
         let para = "username="+user!+"&password="+pass!
+        self.activity.startAnimating()
+        self.view.isUserInteractionEnabled = false
+        let urlRequest = getLoginRequest(para: para)
         
-        login.isEnabled = false
-        
-        var urlRequest = URLRequest(url: URL(string: kLogin)!)
-        urlRequest.timeoutInterval = TimeInterval(kShortTimeoutInterval)
-        urlRequest.httpMethod = HttpMethod.Post.rawValue
-        urlRequest.httpBody = para.data(using: String.Encoding.utf8)
-        urlRequest.httpShouldHandleCookies = true
-        
-        activity.startAnimating()
+        loginAsyncConnect(urlRequest: urlRequest, user: user, pass: pass)
+    }
+    
+    fileprivate func loginAsyncConnect(urlRequest : URLRequest, user: String?, pass: String?){
         NSURLConnection.sendAsynchronousRequest(urlRequest, queue: OperationQueue.main, completionHandler: {(response : URLResponse?, data : Data?, error : Error?) -> Void in
-            if(error != nil){
-                AlertWithNoButton(view: self, title: msg_ConnectTimeout, message: nil, preferredStyle: .alert, showTime: 0.5)
-                printLog(message: String(describing: error) + log_Login_LoginTimeout + kLogin)
-                self.activity.stopAnimating()
-                self.login.isEnabled = true
+            if let urlResponse = response{
+                let httpResponse = urlResponse as! HTTPURLResponse
+                let statusCode = httpResponse.statusCode
+                if(statusCode != 200){
+                    self.alertAndLog(msg: String(statusCode) + msg_HttpError, showTime: 0.5, log: String(statusCode) + msg_HttpError + url_Login)
+                    return
+                }
+                if(error != nil){
+                    self.alertAndLog(msg: msg_ConnectTimeout, showTime: 0.5, log: String(describing: error) + log_Login_LoginTimeout + url_Login)
+                    return
+                }
+                if(data?.isEmpty)!{
+                    self.alertAndLog(msg: msg_ServerNoResponse, showTime: 0.5, log: log_Login_ServerNoResponse + url_Login)
+                    return
+                }
+                
+                let json = JSON(data : data!)
+                let nStatus = json["status"].int
+                let nMsg = json["msg"].string
+                let data = json["data"]
+                
+                if let status = nStatus{
+                    if(status != 0){
+                        if let msg = nMsg{
+                            AlertWithNoButton(view: self, title: msg, message: nil, preferredStyle: .alert, showTime: 1)
+                        }
+                        
+                        self.activity.stopAnimating()
+                        self.view.isUserInteractionEnabled = true
+                        
+                        self.saveDefaultUsernamePassword(username: user!, password: "")
+                        return
+                    }
+                    if data != JSON.null {
+                        let id = data["id"].int
+                        let realname = data["realname"].string
+                        let username = data["username"].string
+                        let portraiturl = data["portraiturl"].string
+                        
+                        loginUser = LoginUser()
+                        loginUser?.id = id
+                        loginUser?.realname = realname
+                        loginUser?.username = username
+                        loginUser?.protraiurl = portraiturl
+
+                        self.activity.stopAnimating()
+                        self.view.isUserInteractionEnabled = true
+                        
+                        self.saveDefaultUsernamePassword(username: user!, password: pass!)
+                        self.present(MainViewController(), animated: true, completion: nil)
+                    }else{
+                        // running there must be webapi error
+                    }
+                }else{
+                    // running there must be webapi error
+                }
+            }else{
+                self.alertAndLog(msg: msg_ServerNoResponse, showTime: 0.5, log: log_Login_ServerNoResponse + url_Login)
                 return
             }
-            if(data?.isEmpty)!{
-                AlertWithNoButton(view: self, title: msg_ServerNoResponse, message: nil, preferredStyle: .alert, showTime: 0.5)
-                printLog(message: log_Login_ServerNoResponse + kLogin)
-                self.activity.stopAnimating()
-                self.login.isEnabled = true
-                return
-            }
-            let json = JSON(data : data!)
-            let status = json["status"].int32Value
-            let msg = json["msg"].string
-            let _ = json["data"]
-            
-            if(status != 0){
-                AlertWithNoButton(view: self, title: msg, message: nil, preferredStyle: .alert, showTime: 1)
-                self.activity.stopAnimating()
-                self.login.isEnabled = true
-                self.saveDefaultUsernamePassword(username: user!, password: "")
-                return
-            }
-            
-            self.activity.stopAnimating()
-            self.login.isEnabled = true
-            
-            self.saveDefaultUsernamePassword(username: user!, password: pass!)
-            
-            self.present(MainViewController(), animated: true, completion: nil)
         })
     }
     
@@ -150,6 +180,32 @@ extension LoginViewController{
         }
         return true
     }
+    
+    fileprivate func autoLogin(){
+        let name = self.username.text
+        let pass = self.password.text
+        if(!(name?.isEmpty)! && !(pass?.isEmpty)!){
+            loginClick(self)
+        }
+    }
+    
+    fileprivate func getLoginRequest(para: String) -> URLRequest{
+        var urlRequest = URLRequest(url: URL(string: url_Login)!)
+        urlRequest.timeoutInterval = TimeInterval(kShortTimeoutInterval)
+        urlRequest.httpMethod = HttpMethod.Post.rawValue
+        urlRequest.httpBody = para.data(using: String.Encoding.utf8)
+        urlRequest.httpShouldHandleCookies = true
+        return urlRequest
+    }
+    
+    fileprivate func alertAndLog(msg: String, showTime: TimeInterval, log: String){
+        AlertWithNoButton(view: self, title: msg, message: nil, preferredStyle: .alert, showTime: showTime)
+        printLog(message: log)
+        
+        self.activity.stopAnimating()
+        self.view.isUserInteractionEnabled = true
+    }
+
 }
 
 //db
@@ -166,9 +222,6 @@ extension LoginViewController{
         
         self.username.text = name
         self.password.text = pass
-        if(!(name?.isEmpty)! && !(pass?.isEmpty)!){
-            loginClick(self)
-        }
     }
     
     fileprivate func saveDefaultUsernamePassword(username : String, password : String){

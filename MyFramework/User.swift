@@ -10,7 +10,7 @@ import UIKit
 
 class User: NSObject {
 
-    var id : Int8?
+    var id : Int?
     var username : String?
     var password : String?
 }

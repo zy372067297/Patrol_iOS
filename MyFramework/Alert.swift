@@ -18,9 +18,10 @@ let msg_PleastEnterRealname = "请输入姓名"
 let msg_ConnectTimeout = "连接超时"
 let msg_PleaseCheckNetworkSetting = "请检查网络设置"
 let msg_ServerNoResponse = "服务器未响应"
+let msg_HttpError = "网络协议错误"
 
 
-public func AlertWithNoButton(view : UIViewController, title : String? , message : String? , preferredStyle : UIAlertControllerStyle , showTime : TimeInterval){
+public func AlertWithNoButton(view : UIViewController, title : String , message : String? , preferredStyle : UIAlertControllerStyle , showTime : TimeInterval){
     let alert = UIAlertController(title: title, message: message, preferredStyle: preferredStyle)
     view.present(alert, animated: true, completion: nil)
     DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + showTime){

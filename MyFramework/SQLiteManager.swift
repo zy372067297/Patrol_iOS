@@ -46,7 +46,7 @@ class SQLiteManager: NSObject {
                 let name = UnsafePointer(sqlite3_column_text(stmt, 1))
                 let pass = UnsafePointer(sqlite3_column_text(stmt, 2))
                 
-                user.id = Int8(id)
+                user.id = Int(id)
                 user.username = String.init(cString: name!)
                 user.password = String.init(cString: pass!)
 
