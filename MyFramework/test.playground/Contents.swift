@@ -4,6 +4,7 @@ import UIKit
 
 
 
-
+var s :String? = nil
+print(s)
 
 

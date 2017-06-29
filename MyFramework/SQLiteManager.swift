@@ -35,13 +35,13 @@ class SQLiteManager: NSObject {
         }
     }
     
-    func queryUser(sql : String) -> [User]{
-        var userArr = [User]()
+    func queryUser(sql : String) -> [T_User]{
+        var userArr = [T_User]()
         let cSql = sql.cString(using: .utf8)
         var stmt:OpaquePointer? = nil
         if(sqlite3_prepare_v2(db, cSql, -1, &stmt, nil) == SQLITE_OK){
             while(sqlite3_step(stmt) == SQLITE_ROW){
-                let user = User()
+                let user = T_User()
                 let id = sqlite3_column_int(stmt, 0)
                 let name = UnsafePointer(sqlite3_column_text(stmt, 1))
                 let pass = UnsafePointer(sqlite3_column_text(stmt, 2))

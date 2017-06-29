@@ -16,11 +16,12 @@
 		6B1BDEA91EEBB9C600B29DA8 /* test.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6B1BDEA81EEBB9C600B29DA8 /* test.storyboard */; };
 		6B1BDEAB1EEBC52700B29DA8 /* CustomTabbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B1BDEAA1EEBC52700B29DA8 /* CustomTabbarView.swift */; };
 		6B1BDEAD1EEBC64100B29DA8 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B1BDEAC1EEBC64100B29DA8 /* Common.swift */; };
-		6B2B08611F02337000B99B5C /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B2B08601F02337000B99B5C /* User.swift */; };
+		6B2B08611F02337000B99B5C /* T_User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B2B08601F02337000B99B5C /* T_User.swift */; };
 		6B55903E1EEE8894008149FD /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B55903D1EEE8894008149FD /* HomeViewController.swift */; };
 		6B5590441EF12053008149FD /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6B5590431EF12053008149FD /* Login.storyboard */; };
 		6B5590461EF12078008149FD /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B5590451EF12078008149FD /* LoginViewController.swift */; };
 		6B6C62201F04DA83000FC91B /* LoginUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6C621F1F04DA83000FC91B /* LoginUser.swift */; };
+		6B6C62221F04EB38000FC91B /* RegistModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6C62211F04EB38000FC91B /* RegistModel.swift */; };
 		6B6F529E1F00E58500B09846 /* SystemInit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6F529D1F00E58500B09846 /* SystemInit.swift */; };
 		6B6F52A11F00E69B00B09846 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B6F52A01F00E69B00B09846 /* libsqlite3.0.tbd */; };
 		6B6F52A71F00ED3800B09846 /* SQLiteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6F52A61F00ED3800B09846 /* SQLiteManager.swift */; };
@@ -45,11 +46,12 @@
 		6B1BDEA81EEBB9C600B29DA8 /* test.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = test.storyboard; sourceTree = "<group>"; };
 		6B1BDEAA1EEBC52700B29DA8 /* CustomTabbarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomTabbarView.swift; sourceTree = "<group>"; };
 		6B1BDEAC1EEBC64100B29DA8 /* Common.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
-		6B2B08601F02337000B99B5C /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		6B2B08601F02337000B99B5C /* T_User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = T_User.swift; sourceTree = "<group>"; };
 		6B55903D1EEE8894008149FD /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		6B5590431EF12053008149FD /* Login.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Login.storyboard; sourceTree = "<group>"; };
 		6B5590451EF12078008149FD /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		6B6C621F1F04DA83000FC91B /* LoginUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginUser.swift; sourceTree = "<group>"; };
+		6B6C62211F04EB38000FC91B /* RegistModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistModel.swift; sourceTree = "<group>"; };
 		6B6F529D1F00E58500B09846 /* SystemInit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SystemInit.swift; sourceTree = "<group>"; };
 		6B6F52A01F00E69B00B09846 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
 		6B6F52A31F00EB9000B09846 /* MyFramework-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MyFramework-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -121,7 +123,8 @@
 		6B2B085F1F02335C00B99B5C /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				6B2B08601F02337000B99B5C /* User.swift */,
+				6B2B08601F02337000B99B5C /* T_User.swift */,
+				6B6C62211F04EB38000FC91B /* RegistModel.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -358,7 +361,7 @@
 				6B5590461EF12078008149FD /* LoginViewController.swift in Sources */,
 				6BAAD82E1EFCA75D00FFE413 /* Log.swift in Sources */,
 				6B0E58281EF8BD7600F4AF1A /* TaskNaviTestViewController.swift in Sources */,
-				6B2B08611F02337000B99B5C /* User.swift in Sources */,
+				6B2B08611F02337000B99B5C /* T_User.swift in Sources */,
 				6BF046EE1EF2296F006C362E /* TaskViewController.swift in Sources */,
 				6B1BDEAD1EEBC64100B29DA8 /* Common.swift in Sources */,
 				6B6C62201F04DA83000FC91B /* LoginUser.swift in Sources */,
@@ -371,6 +374,7 @@
 				6B6F52A71F00ED3800B09846 /* SQLiteManager.swift in Sources */,
 				6B55903E1EEE8894008149FD /* HomeViewController.swift in Sources */,
 				6B1BDEA11EEBB64500B29DA8 /* MainViewController.swift in Sources */,
+				6B6C62221F04EB38000FC91B /* RegistModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

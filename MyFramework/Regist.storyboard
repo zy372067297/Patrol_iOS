@@ -124,6 +124,7 @@
                         </connections>
                     </view>
                     <connections>
+                        <outlet property="btnRegist" destination="kbz-SX-fBV" id="l9o-qm-eX8"/>
                         <outlet property="department" destination="wRP-2B-gHt" id="VEM-7h-6eg"/>
                         <outlet property="organization" destination="To5-p0-7ep" id="t0O-lp-rek"/>
                         <outlet property="passconfirm" destination="mqr-6U-PG7" id="vcf-Kr-TSu"/>
@@ -137,7 +138,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZdE-aa-A72" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-7068" y="-382"/>
+            <point key="canvasLocation" x="-7089" y="-383"/>
         </scene>
     </scenes>
     <resources>

@@ -8,7 +8,9 @@
 
 
 //URL
-let url_Login = "http://192.168.0.122/test/api/user/login"
+let url_Main = "http://192.168.0.122/test"
+let url_Login = "\(url_Main)/api/user/login"
+let url_Regist = "\(url_Main)/api/user/regist"
 
 let kShortTimeoutInterval = 5
 

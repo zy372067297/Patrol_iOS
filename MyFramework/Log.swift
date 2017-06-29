@@ -10,8 +10,8 @@ import Foundation
 let logFileName = "log.txt"
 let log_SystemStart = "System start"
 let log_Login_InsertOrReplaceUsernamePasswordError = "Login insert or replace username/password error"
-let log_Login_ServerNoResponse = "Login server has no response"
-let log_Login_LoginTimeout = "Login time out"
+let log_ServerNoResponse = "Server has no response"
+let log_Timeout = "Time out"
 
 
 public func printLog<T>(message: T, file: String = #file, function: String = #function, line: Int = #line){
