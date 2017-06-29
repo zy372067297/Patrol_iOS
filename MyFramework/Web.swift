@@ -8,9 +8,9 @@
 
 
 //URL
-let kLogin = "http://192.168.1.122/test/api/user/login"
+let kLogin = "http://192.168.0.122/test/api/user/login"
 
-let kTimeoutInterval = 10
+let kShortTimeoutInterval = 5
 
 public enum HttpMethod: String{
     case Get = "GET"

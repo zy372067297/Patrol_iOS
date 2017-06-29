@@ -9,6 +9,7 @@
 import Foundation
 
 public func SystemInit(){
+    
     if(!SQLiteManager.instance.openDB(dbName: kDBName)){
         printLog(message: "can not create sqlite database [" + kDBName + "]")
         exit(0)
@@ -19,6 +20,6 @@ public func SystemInit(){
     }
     
     
-    
+    HTTPCookieStorage.shared.cookieAcceptPolicy = .always
 }
 

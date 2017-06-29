@@ -25,8 +25,12 @@ extension UIColor{
 let kDBName = "appDB.sqlite"
 
 let kTableName_User = "T_User"
-let kSql_CreateUserTable = "CREATE TABLE IF NOT EXISTS '" + kTableName_User + "' ( 'ID' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,'user' TEXT,'pass' TEXT);"
+let kSql_CreateUserTable = "CREATE TABLE IF NOT EXISTS '" + kTableName_User + "' ( 'ID' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,'user' TEXT UNIQUE,'pass' TEXT);"
 let kSql_SelectUserTableLast = "select * from '" + kTableName_User + "' order by id desc limit 1"
+
+func getInsertOrReplaceSql(username : String,password : String) -> String{
+    return "insert or replace into '" + kTableName_User + "' (user,pass)values ('" + username + "','" + password + "')"
+}
 
 
 
