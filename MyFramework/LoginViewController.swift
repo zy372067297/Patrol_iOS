@@ -26,6 +26,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        loginUser = nil
         if(isFirstApear){
             //autoLogin()
             isFirstApear = false
@@ -74,7 +75,7 @@ extension LoginViewController{
 }
 
 //event
-extension LoginViewController{
+extension LoginViewController: LoginDelegate{
     
     fileprivate func loginButtonClick(){
         let user = username.text
@@ -94,7 +95,8 @@ extension LoginViewController{
 
     fileprivate func registeButtonClick(){
         let sb = UIStoryboard(name: "Regist", bundle: nil)
-        let vc = sb.instantiateViewController(withIdentifier: "RegistViewController")
+        let vc = sb.instantiateViewController(withIdentifier: "RegistViewController") as! RegistViewController
+        vc.delegate = self
         self.present(vc, animated: true, completion: nil)
     }
 }
@@ -205,6 +207,11 @@ extension LoginViewController{
             }
         })
     }
+    
+    internal func clearUsernamePassword() {
+        self.username.text = ""
+        self.password.text = ""
+    }
 
 }
 
@@ -231,4 +238,8 @@ extension LoginViewController{
             exit(0)
         }
     }
+}
+
+protocol LoginDelegate {
+    func clearUsernamePassword()
 }

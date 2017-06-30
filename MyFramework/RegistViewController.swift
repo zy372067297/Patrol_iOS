@@ -26,6 +26,7 @@ class RegistViewController: UIViewController {
     
     let registModel: RegistModel = RegistModel()
 
+    var delegate: LoginDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -64,7 +65,7 @@ extension RegistViewController{
             return
         }
         
-        let para = "username=\(registModel.username)&password=\(registModel.password)&realname=\(registModel.realname)&phone=\(registModel.phone)&organization=\(registModel.organization)&department=\(registModel.department)&remark=\(registModel.remark)"
+        let para = "username=\(registModel.username!)&password=\(registModel.password!)&realname=\(registModel.realname!)&phone=\(registModel.phone!)&organization=\(registModel.organization!)&department=\(registModel.department!)&remark=\(registModel.remark!)"
         self.activity.startAnimating()
         self.view.isUserInteractionEnabled = false
         let urlRequest = getRegistRequest(para: para)
@@ -158,7 +159,15 @@ extension RegistViewController{
                         return
                     }
                     
-                    AlertWithUIAlertAction(view: self, title: msg_Remind, message: msg_RegistSuccess, preferredStyle: .alert , uiAlertAction: UIAlertAction(title: msg_OK, style: .default, handler: nil))
+                    AlertWithUIAlertAction(view: self, title: msg_Remind, message: msg_RegistSuccess, preferredStyle: .alert ,
+                                           uiAlertAction: UIAlertAction(title: msg_OK, style: UIAlertActionStyle.default, handler: {
+                                            (alertAction: UIAlertAction) -> Void in
+                                                self.delegate?.clearUsernamePassword()
+                                                self.dismiss(animated: true, completion: nil)
+                                           }))
+                    
+                    self.activity.stopAnimating()
+                    self.view.isUserInteractionEnabled = true
                 }else{
                     // running there must be webapi error
                 }

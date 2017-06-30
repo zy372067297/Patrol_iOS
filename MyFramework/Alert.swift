@@ -34,9 +34,11 @@ public func AlertWithNoButton(view : UIViewController, title : String , message 
 }
 
 public func AlertWithUIAlertAction(view : UIViewController, title : String , message : String? , preferredStyle : UIAlertControllerStyle ,uiAlertAction: UIAlertAction){
+    
     let alert = UIAlertController(title: title, message: message, preferredStyle: preferredStyle)
     alert.addAction(uiAlertAction)
     view.present(alert, animated: true, completion: nil)
 }
+
 
 
