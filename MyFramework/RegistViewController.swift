@@ -23,7 +23,7 @@ class RegistViewController: UIViewController {
     @IBOutlet weak var btnRegist: UIButton!
     
     var activity : UIActivityIndicatorView!
-    
+     
     let registModel: RegistModel = RegistModel()
 
     var delegate: LoginDelegate?
