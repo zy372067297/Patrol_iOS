@@ -27,6 +27,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         loginUser = nil
+        setLoginButtonEnable()
         if(isFirstApear){
             //autoLogin()
             isFirstApear = false
@@ -38,7 +39,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
     }
     
     @IBAction func settingClick(_ sender: Any) {
-        printLog(message: "Setting")
+        AlertWithNoButton(view: self, title: "敬请期待", message: nil, preferredStyle: .alert, showTime: 1)
     }
     
     @IBAction func registeClick(_ sender: Any) {
@@ -46,7 +47,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
     }
     
     @IBAction func forgetClick(_ sender: Any) {
-        printLog(message: "Forget")
+        AlertWithNoButton(view: self, title: "敬请期待", message: nil, preferredStyle: .alert, showTime: 1)
     }
 }
 
@@ -55,23 +56,15 @@ extension LoginViewController{
     
     fileprivate func setupUI(){
         username.delegate = self
+        username.addTarget(self, action: #selector(usernameEditingEvents(_:)), for: .allEditingEvents)
         password.delegate = self
+        password.addTarget(self, action: #selector(passwordEditingEvents(_:)), for: .allEditingEvents)
         
         activity = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
         activity.center = login.center
         self.view.addSubview(activity)
     }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        let identifier = textField.accessibilityIdentifier
-        if(identifier == "usernameIdentifier"){
-            password.becomeFirstResponder()
-        }else if(identifier == "passwordIdentifier"){
-            loginClick(self)
-        }
-        return true
-    }
+  
 }
 
 //event
@@ -98,6 +91,25 @@ extension LoginViewController: LoginDelegate{
         let vc = sb.instantiateViewController(withIdentifier: "RegistViewController") as! RegistViewController
         vc.delegate = self
         self.present(vc, animated: true, completion: nil)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        let identifier = textField.accessibilityIdentifier
+        if(identifier == "usernameIdentifier"){
+            password.becomeFirstResponder()
+        }else if(identifier == "passwordIdentifier"){
+            loginClick(self)
+        }
+        return true
+    }
+    
+    func usernameEditingEvents(_ textField: UITextField){
+        self.login.isEnabled = (textField.text?.characters.count)!>0 && (password.text?.characters.count)!>0
+    }
+    
+    func passwordEditingEvents(_ textField: UITextField){
+        self.login.isEnabled = (textField.text?.characters.count)!>0 && (username.text?.characters.count)!>0
     }
 }
 
@@ -211,6 +223,14 @@ extension LoginViewController{
     internal func clearUsernamePassword() {
         self.username.text = ""
         self.password.text = ""
+    }
+    
+    fileprivate func setLoginButtonEnable(){
+        if((username.text?.isEmpty)! || (password.text?.isEmpty)!){
+            login.isEnabled = false
+        }else{
+            login.isEnabled = true
+        }
     }
 
 }

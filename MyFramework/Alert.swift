@@ -21,7 +21,7 @@ let msg_PleaseCheckNetworkSetting = "请检查网络设置"
 let msg_ServerNoResponse = "服务器未响应"
 let msg_HttpError = "网络协议错误"
 let msg_RegistSuccess = "注册成功"
-let msg_Remind = "提醒"
+let msg_Remind = "提示"
 let msg_OK = "确定"
 
 

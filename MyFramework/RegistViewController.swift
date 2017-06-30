@@ -61,7 +61,7 @@ extension RegistViewController{
         registModel.department = self.department.text
         registModel.remark = self.remark.text
         
-        if(!CheckInput(registModel: registModel)){
+        if(!checkInput(registModel: registModel)){
             return
         }
         
@@ -70,18 +70,69 @@ extension RegistViewController{
         self.view.isUserInteractionEnabled = false
         let urlRequest = getRegistRequest(para: para)
         
-        RegistAsyncConnect(urlRequest: urlRequest)
+        registAsyncConnect(urlRequest: urlRequest)
     }
     
     fileprivate func backButtonClick(){
         self.dismiss(animated: true, completion: nil)
     }
+    
+    internal func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+        self.remarkPlaceholder.isHidden = true
+        return true
+    }
+    
+    internal func textViewDidEndEditing(_ textView: UITextView) {
+        if(remark.text.isEmpty){
+            self.remarkPlaceholder.isHidden = false
+        } else {
+            self.remarkPlaceholder.isHidden = true
+        }
+    }
+    
+    internal func textFieldDidEndEditing(_ textField: UITextField) {
+        if(textField.accessibilityIdentifier == "newuserIdentifier" && !((username.text?.isEmpty)!)){
+            let para = "username=\(username.text!)"
+            let urlRequest = getUsernameUniqueCheckRequest(para: para)
+            usernameUniqueCheck(urlRequest: urlRequest)
+        }
+    }
+    
+    internal func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        let identifier = textField.accessibilityIdentifier
+        if(identifier == "newuserIdentifier"){
+            self.password.becomeFirstResponder()
+        }else if(identifier == "passIdentifier"){
+            self.passconfirm.becomeFirstResponder()
+        }else if(identifier == "confirmPassIdentifier"){
+            self.realname.becomeFirstResponder()
+        }else if(identifier == "realnameIdentifier"){
+            self.phone.becomeFirstResponder()
+        }else if(identifier == "phoneIdentifier"){
+            self.organization.becomeFirstResponder()
+        }else if(identifier == "organizationIdentifier"){
+            self.department.becomeFirstResponder()
+        }else if(identifier == "departmentIdentifier"){
+            self.department.resignFirstResponder()
+        }
+        return true
+    }
+    
+    internal func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if(text == "\n"){
+            self.view.endEditing(true)
+            return false
+        }
+        return true
+    }
+    
 }
 
 //func
 extension RegistViewController{
     
-    fileprivate func CheckInput(registModel: RegistModel) -> Bool {
+    fileprivate func checkInput(registModel: RegistModel) -> Bool {
         if(registModel.username?.isEmpty)!{
             AlertWithNoButton(view: self, title: msg_PleaseEnterNewUsername, message: nil, preferredStyle: .alert, showTime: 0.5)
             return false
@@ -118,6 +169,15 @@ extension RegistViewController{
         return urlRequest
     }
     
+    fileprivate func getUsernameUniqueCheckRequest(para: String) -> URLRequest{
+        var urlRequest = URLRequest(url: URL(string: url_RegistUsernameUniqueCheck)!)
+        urlRequest.timeoutInterval = TimeInterval(kShortTimeoutInterval)
+        urlRequest.httpMethod = HttpMethod.Post.rawValue
+        urlRequest.httpBody = para.data(using: String.Encoding.utf8)
+        urlRequest.httpShouldHandleCookies = true
+        return urlRequest
+    }
+    
     fileprivate func alertAndLog(msg: String, showTime: TimeInterval, log: String){
         AlertWithNoButton(view: self, title: msg, message: nil, preferredStyle: .alert, showTime: showTime)
         printLog(message: log)
@@ -126,21 +186,21 @@ extension RegistViewController{
         self.view.isUserInteractionEnabled = true
     }
     
-    fileprivate func RegistAsyncConnect(urlRequest : URLRequest){
+    fileprivate func registAsyncConnect(urlRequest : URLRequest){
         NSURLConnection.sendAsynchronousRequest(urlRequest, queue: OperationQueue.main, completionHandler: {(response : URLResponse?, data : Data?, error : Error?) -> Void in
             if let urlResponse = response{
                 let httpResponse = urlResponse as! HTTPURLResponse
                 let statusCode = httpResponse.statusCode
                 if(statusCode != 200){
-                    self.alertAndLog(msg: String(statusCode) + msg_HttpError, showTime: 0.5, log: String(statusCode) + msg_HttpError + url_Regist)
+                    self.alertAndLog(msg: String(statusCode) + msg_HttpError, showTime: 1, log: String(statusCode) + msg_HttpError + url_Regist)
                     return
                 }
                 if(error != nil){
-                    self.alertAndLog(msg: msg_ConnectTimeout, showTime: 0.5, log: String(describing: error) + log_Timeout + url_Regist)
+                    self.alertAndLog(msg: msg_ConnectTimeout, showTime: 1, log: String(describing: error) + log_Timeout + url_Regist)
                     return
                 }
                 if(data?.isEmpty)!{
-                    self.alertAndLog(msg: msg_ServerNoResponse, showTime: 0.5, log: log_ServerNoResponse + url_Regist)
+                    self.alertAndLog(msg: msg_ServerNoResponse, showTime: 1, log: log_ServerNoResponse + url_Regist)
                     return
                 }
                 
@@ -151,7 +211,9 @@ extension RegistViewController{
                 if let status = nStatus{
                     if(status != 0){
                         if let msg = nMsg{
-                            AlertWithNoButton(view: self, title: msg, message: nil, preferredStyle: .alert, showTime: 1)
+                            //AlertWithNoButton(view: self, title: msg, message: nil, preferredStyle: .alert, showTime: 1)
+                            AlertWithUIAlertAction(view: self, title: msg_Remind, message: msg, preferredStyle: .alert ,
+                                                   uiAlertAction: UIAlertAction(title: msg_OK, style: UIAlertActionStyle.default, handler: nil))
                         }
                         self.activity.stopAnimating()
                         self.view.isUserInteractionEnabled = true
@@ -177,6 +239,33 @@ extension RegistViewController{
             }
         })
     }
+    
+    fileprivate func usernameUniqueCheck(urlRequest : URLRequest){
+        NSURLConnection.sendAsynchronousRequest(urlRequest, queue: OperationQueue.main, completionHandler: {(response : URLResponse?, data : Data?, error : Error?) -> Void in
+            if let urlResponse = response{
+                let httpResponse = urlResponse as! HTTPURLResponse
+                let statusCode = httpResponse.statusCode
+                if(statusCode == 200 && error == nil && !(data?.isEmpty)!){
+                    let json = JSON(data : data!)
+                    let nStatus = json["status"].int
+                    let nMsg = json["msg"].string
+                    
+                    if let status = nStatus{
+                        if(status != 0){
+                            if let msg = nMsg{
+                                self.username.layer.borderColor = UIColor.red.cgColor
+                                self.username.layer.borderWidth = 1
+                                AlertWithNoButton(view: self, title: msg, message: nil, preferredStyle: .alert, showTime: 1)
+                                return
+                            }
+                        }
+                    }
+                }
+            }
+            self.username.layer.borderColor = UIColor.clear.cgColor
+        })
+    }
+
 }
 
 //
@@ -197,46 +286,6 @@ extension RegistViewController : UITextViewDelegate , UITextFieldDelegate {
         self.view.addSubview(activity)
     }
     
-    internal func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
-        self.remarkPlaceholder.isHidden = true
-        return true
-    }
-    
-    internal func textViewDidEndEditing(_ textView: UITextView) {
-        if(remark.text.isEmpty){
-            self.remarkPlaceholder.isHidden = false
-        } else {
-            self.remarkPlaceholder.isHidden = true
-        }
-    }
-    
-    internal func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        let identifier = textField.accessibilityIdentifier
-        if(identifier == "newuserIdentifier"){
-            self.password.becomeFirstResponder()
-        }else if(identifier == "passIdentifier"){
-            self.passconfirm.becomeFirstResponder()
-        }else if(identifier == "confirmPassIdentifier"){
-            self.realname.becomeFirstResponder()
-        }else if(identifier == "realnameIdentifier"){
-            self.phone.becomeFirstResponder()
-        }else if(identifier == "phoneIdentifier"){
-            self.organization.becomeFirstResponder()
-        }else if(identifier == "organizationIdentifier"){
-            self.department.becomeFirstResponder()
-        }else if(identifier == "departmentIdentifier"){
-            self.department.resignFirstResponder()
-        }
-        return true
-    }
-    
-    internal func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        if(text == "\n"){
-            self.view.endEditing(true)
-            return false
-        }
-        return true
-    }
+
  
 }
